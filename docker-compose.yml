@@ -1,0 +1,32 @@
+version: "3.8"
+
+services:
+  db:
+    image: postgres
+    container_name: pg
+    networks:
+      - backend
+    environment:
+      POSTGRES_PASSWORD: "password"
+    volumes:
+      - ./postgres-data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+
+  # when connecting use "pg" as host name!
+  pg-admin:
+    image: dpage/pgadmin4
+    networks:
+      - backend
+    depends_on:
+      - db
+    ports:
+      - "8080:80"
+    environment:
+      PGADMIN_DEFAULT_EMAIL: "user@email.com"
+      PGADMIN_DEFAULT_PASSWORD: "password"
+
+networks:
+  backend:
+    name: pg-net
+    driver: bridge
